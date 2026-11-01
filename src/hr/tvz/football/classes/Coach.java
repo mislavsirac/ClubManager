@@ -1,8 +1,10 @@
-package hr.tvz.java.Models;
+package hr.tvz.football.classes;
+
+import hr.tvz.football.abstracts.Person;
 
 import java.util.Scanner;
 
-public class Coach extends Person{
+public class Coach extends Person {
     private int yearsOfExperience;
 
     public Coach(String name, String lastName, int birthYear, int yearsOfExperience) {
@@ -28,13 +30,14 @@ public class Coach extends Person{
         Coach coach = new Coach();
 
         System.out.println("Ime trenera: ");
-        coach.setName(scanner.next());
+        coach.setName(scanner.nextLine());
         System.out.println("Prezime trenera: ");
-        coach.setLastName(scanner.next());
+        coach.setLastName(scanner.nextLine());
         System.out.println("Godina rođenja: ");
         coach.setBirthYear(scanner.nextInt());
         System.out.println("Godine iskustva: ");
         coach.setYearsOfExperience(scanner.nextInt());
+        scanner.nextLine();
         System.out.println("\n");
 
         return  coach;

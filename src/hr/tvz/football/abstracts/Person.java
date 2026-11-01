@@ -1,6 +1,6 @@
-package hr.tvz.java.Models;
+package hr.tvz.football.abstracts;
 
-public class Person {
+public abstract class Person {
     private String name;
     private String lastName;
     private int birthYear;

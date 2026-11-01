@@ -1,6 +1,6 @@
-package hr.tvz.java;
+package hr.tvz.football.app;
 
-import hr.tvz.java.Models.*;
+import hr.tvz.football.classes.FootballClub;
 
 import java.util.Arrays;
 import java.util.Scanner;
@@ -11,6 +11,7 @@ public class Main {
 
         System.out.println("Koliko klubova želite unijeti: ");
         var numberOfClubs = scanner.nextInt();
+        scanner.nextLine();
 
         var clubs = FootballClub.InsertClubs(numberOfClubs, scanner);
 
@@ -25,8 +26,10 @@ public class Main {
             System.out.println("===== NOGOMETNI KLUBOVI =====\n");
             System.out.println("1 - Pretraži klub");
             System.out.println("0 - Završi program");
+            System.out.println("Odabir: ");
 
             selection = scanner.nextInt();
+            scanner.nextLine();
 
             if (selection == 1)
                 ClubSearch(scanner, clubs);
@@ -36,7 +39,7 @@ public class Main {
     private static void ClubSearch(Scanner scanner, FootballClub[] clubs){
 
         System.out.println("\nUnesite naziv kluba: ");
-        var searchString = scanner.next();
+        var searchString = scanner.nextLine();
 
         var match = Arrays.stream(clubs)
                 .filter(x -> x.getName().equalsIgnoreCase(searchString))
@@ -48,11 +51,7 @@ public class Main {
             return;
         }
 
-        System.out.println("===== " + match.getName().toUpperCase() + " =====");
-        System.out.println("Grad: " + match.getCity());
-        System.out.println("Godina osnivanja: " + match.getEstablishedYear());
-        System.out.println("Trener: " + match.getCoach().getFullName());
-        System.out.println("Stadion: " + match.getStadium().getName() + "\n");
+        System.out.println(match.getDescription());
     }
 
 }

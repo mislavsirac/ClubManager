@@ -1,24 +1,31 @@
 package hr.tvz.football.app;
 
 import hr.tvz.football.classes.FootballClub;
+import hr.tvz.football.exceptions.ClubNotFoundException;
+import hr.tvz.football.helper.ExceptionHandler;
 
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         var scanner = new Scanner(System.in);
 
-        System.out.println("Koliko klubova želite unijeti: ");
-        var numberOfClubs = scanner.nextInt();
-        scanner.nextLine();
+        try {
+            var inputHandler = new ExceptionHandler(scanner);
+            var numberOfClubs = inputHandler.insertWholeNumber(
+                    "Koliko klubova želite unijeti: ", 1, Integer.MAX_VALUE
+            );
 
-        var clubs = FootballClub.InsertClubs(numberOfClubs, scanner);
+            var clubs = FootballClub.InsertClubs(numberOfClubs, inputHandler);
 
-        NavigationMenu(scanner, clubs);
+            NavigationMenu(inputHandler, clubs);
+        } finally {
+            scanner.close();
+            System.out.println("Program je završio.");
+        }
     }
 
-    private static void NavigationMenu(Scanner scanner, FootballClub[] clubs){
+    private static void NavigationMenu(ExceptionHandler inputHandler, FootballClub[] clubs){
         int selection = 1;
 
         while (selection != 0){
@@ -26,32 +33,33 @@ public class Main {
             System.out.println("===== NOGOMETNI KLUBOVI =====\n");
             System.out.println("1 - Pretraži klub");
             System.out.println("0 - Završi program");
-            System.out.println("Odabir: ");
-
-            selection = scanner.nextInt();
-            scanner.nextLine();
+            selection = inputHandler.insertListOption("Odabir: ", 0, 1);
 
             if (selection == 1)
-                ClubSearch(scanner, clubs);
+                ClubSearch(inputHandler, clubs);
         }
     }
 
-    private static void ClubSearch(Scanner scanner, FootballClub[] clubs){
+    private static void ClubSearch(ExceptionHandler inputHandler, FootballClub[] clubs){
+        var searchString = inputHandler.insertRequiredText("\nUnesite naziv kluba: ");
 
-        System.out.println("\nUnesite naziv kluba: ");
-        var searchString = scanner.nextLine();
+        try {
+            var match = FindClub(clubs, searchString);
+            System.out.println(match.getDescription());
+        } catch (ClubNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 
-        var match = Arrays.stream(clubs)
-                .filter(x -> x.getName().equalsIgnoreCase(searchString))
-                .findFirst()
-                .orElse(null);
-
-        if(match == null){
-            System.out.println("Nema kluba s tim nazivom.\n");
-            return;
+    private static FootballClub FindClub(FootballClub[] clubs, String name)
+            throws ClubNotFoundException {
+        for (FootballClub club : clubs) {
+            if (club.getName().equalsIgnoreCase(name)) {
+                return club;
+            }
         }
 
-        System.out.println(match.getDescription());
+        throw new ClubNotFoundException(name);
     }
 
 }

@@ -2,8 +2,9 @@ package hr.tvz.football.classes;
 
 import hr.tvz.football.abstracts.Person;
 import hr.tvz.football.enums.Position;
+import hr.tvz.football.helper.ExceptionHandler;
 
-import java.util.Scanner;
+import java.time.Year;
 
 public class Player extends Person {
     private int number;
@@ -34,6 +35,10 @@ public class Player extends Person {
         return position;
     }
 
+    public void setPosition(Position position) {
+        this.position = position;
+    }
+
     public void setPosition(int position) {
         switch(position) {
             case 1:
@@ -53,31 +58,30 @@ public class Player extends Person {
         }
     }
 
-    public static Player InsertPlayer(Scanner scanner){
+    public static Player InsertPlayer(ExceptionHandler inputHandler){
         Player player = new Player();
+        int currentYear = Year.now().getValue();
 
-        System.out.println("Ime: ");
-        player.setName(scanner.nextLine());
-        System.out.println("Prezime: ");
-        player.setLastName(scanner.nextLine());
-        System.out.println("Godina rođenja: ");
-        player.setBirthYear(scanner.nextInt());
-        System.out.println("Broj dresa: ");
-        player.setNumber(scanner.nextInt());
-        System.out.println("Pozicija (1 - VRATAR, 2 - BRANIC, 3 - VEZNJAK, 4 - NAPADAC): ");
-        player.setPosition(scanner.nextInt());
-        scanner.nextLine();
+        player.setName(inputHandler.insertRequiredText("Ime: "));
+        player.setLastName(inputHandler.insertRequiredText("Prezime: "));
+        player.setBirthYear(inputHandler.insertWholeNumber(
+                "Godina rođenja: ", 1, currentYear
+        ));
+        player.setNumber(inputHandler.insertWholeNumber("Broj dresa: ", 1, 99));
+        player.setPosition(inputHandler.insertPosition(
+                "Pozicija (1 - VRATAR, 2 - BRANIC, 3 - VEZNJAK, 4 - NAPADAC): "
+        ));
         System.out.println("\n");
 
         return  player;
     }
 
-    public static Player[] InsertPlayers(Scanner scanner, int numberOfPlayers){
+    public static Player[] InsertPlayers(ExceptionHandler inputHandler, int numberOfPlayers){
         Player[] players = new Player[numberOfPlayers];
 
         for(int i=0; i<numberOfPlayers; i++) {
             System.out.println("--- IGRAČ "+ (i+1) + " ---");
-            players[i] = InsertPlayer(scanner);
+            players[i] = InsertPlayer(inputHandler);
         }
 
         return players;

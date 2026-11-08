@@ -1,9 +1,10 @@
 package hr.tvz.football.classes;
 
 import hr.tvz.football.abstracts.Building;
+import hr.tvz.football.helper.ExceptionHandler;
 import hr.tvz.football.interfaces.Describable;
 
-import java.util.Scanner;
+import java.time.Year;
 
 public class FootballClub implements Describable {
     private String name;
@@ -84,51 +85,52 @@ public class FootballClub implements Describable {
         return totalNumberOfBeds;
     }
 
-    public static FootballClub[] InsertClubs(int numberOfClubs, Scanner scanner){
+    public static FootballClub[] InsertClubs(int numberOfClubs, ExceptionHandler inputHandler){
         FootballClub[] clubs = new FootballClub[numberOfClubs];
+        int currentYear = Year.now().getValue();
 
         for(int i = 0; i < numberOfClubs; i++){
             var club = new FootballClub();
 
             System.out.println("===== UNOS KLUBA " + (i+1) + "=====\n");
-            System.out.println("Naziv kluba: ");
-            club.setName(scanner.nextLine());
-            System.out.println("Grad: ");
-            club.setCity(scanner.nextLine());
-            System.out.println("Godina osnivanja: ");
-            club.setEstablishedYear(scanner.nextInt());
-            scanner.nextLine();
+            club.setName(inputHandler.insertRequiredText("Naziv kluba: "));
+            club.setCity(inputHandler.insertRequiredText("Grad: "));
+            club.setEstablishedYear(inputHandler.insertWholeNumber(
+                    "Godina osnivanja: ", 1, currentYear
+            ));
             System.out.println("\n");
 
-            club.setCoach(Coach.InsertCoach(scanner));
+            club.setCoach(Coach.InsertCoach(inputHandler));
 
-            System.out.println("Koliko igrača želite unijeti: ");
-            var numberOfPlayers = scanner.nextInt();
-            scanner.nextLine();
+            var numberOfPlayers = inputHandler.insertWholeNumber(
+                    "Koliko igrača želite unijeti: ", 0, Integer.MAX_VALUE
+            );
 
-            club.setPlayers(Player.InsertPlayers(scanner, numberOfPlayers));
+            club.setPlayers(Player.InsertPlayers(inputHandler, numberOfPlayers));
 
-            System.out.println("Koliko građevina želite unijeti: ");
-            var numberOfBuildings = scanner.nextInt();
-            scanner.nextLine();
+            var numberOfBuildings = inputHandler.insertWholeNumber(
+                    "Koliko građevina želite unijeti: ", 0, Integer.MAX_VALUE
+            );
 
             Building[] buildings = new Building[numberOfBuildings];
 
             for (int j = 0; j < numberOfBuildings; j++) {
                 System.out.println("--- GRAĐEVINA " + (j + 1) + " ---");
-                System.out.println("Vrsta (1 - Stadion, 2 - MedicinskaOrdinacija, 3 - SportskiDom): ");
-                var buildingType = scanner.nextInt();
-                scanner.nextLine();
+                var buildingType = inputHandler.insertListOption(
+                        "Vrsta (1 - Stadion, 2 - MedicinskaOrdinacija, 3 - SportskiDom): ",
+                        1,
+                        3
+                );
 
                 switch (buildingType) {
                     case 1:
-                        buildings[j] = Stadium.InsertStadium(scanner);
+                        buildings[j] = Stadium.InsertStadium(inputHandler);
                         break;
                     case 2:
-                        buildings[j] = MedicalInstitution.InsertMedicalInstitution(scanner);
+                        buildings[j] = MedicalInstitution.InsertMedicalInstitution(inputHandler);
                         break;
                     case 3:
-                        buildings[j] = SportsCenter.InsertSportsCenter(scanner);
+                        buildings[j] = SportsCenter.InsertSportsCenter(inputHandler);
                         break;
                     default:
                         throw new IllegalArgumentException("Nepoznata vrsta građevine: " + buildingType);

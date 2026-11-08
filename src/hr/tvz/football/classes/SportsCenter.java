@@ -1,9 +1,8 @@
 package hr.tvz.football.classes;
 
 import hr.tvz.football.abstracts.Building;
+import hr.tvz.football.helper.ExceptionHandler;
 import hr.tvz.football.records.Address;
-
-import java.util.Scanner;
 
 public class SportsCenter extends Building{
     private int numberOfBeds;
@@ -53,17 +52,17 @@ public class SportsCenter extends Building{
         return getDescription(this, ordinalNumber, buildingCapacity);
     }
 
-    public static SportsCenter InsertSportsCenter(Scanner scanner) {
+    public static SportsCenter InsertSportsCenter(ExceptionHandler inputHandler) {
         SportsCenter sportsCenter = new SportsCenter();
 
-        System.out.println("Naziv: ");
-        sportsCenter.setName(scanner.nextLine());
-        sportsCenter.setAddress(Address.InsertAddress(scanner));
-        System.out.println("Broj kreveta: ");
-        sportsCenter.setNumberOfBeds(scanner.nextInt());
-        System.out.println("Ima blagovaonicu (true/false): ");
-        sportsCenter.setHasDiningRoom(scanner.nextBoolean());
-        scanner.nextLine();
+        sportsCenter.setName(inputHandler.insertRequiredText("Naziv: "));
+        sportsCenter.setAddress(Address.InsertAddress(inputHandler));
+        sportsCenter.setNumberOfBeds(inputHandler.insertWholeNumber(
+                "Broj kreveta: ", 1, Integer.MAX_VALUE
+        ));
+        sportsCenter.setHasDiningRoom(inputHandler.insertBoolean(
+                "Ima blagovaonicu (true/false): "
+        ));
         System.out.println("\n");
 
         return sportsCenter;

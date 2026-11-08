@@ -1,8 +1,9 @@
 package hr.tvz.football.classes;
 
 import hr.tvz.football.abstracts.Person;
+import hr.tvz.football.helper.ExceptionHandler;
 
-import java.util.Scanner;
+import java.time.Year;
 
 public class Coach extends Person {
     private int yearsOfExperience;
@@ -26,18 +27,18 @@ public class Coach extends Person {
         this.yearsOfExperience = yearsOfExperience;
     }
 
-    public static Coach InsertCoach(Scanner scanner){
+    public static Coach InsertCoach(ExceptionHandler inputHandler){
         Coach coach = new Coach();
+        int currentYear = Year.now().getValue();
 
-        System.out.println("Ime trenera: ");
-        coach.setName(scanner.nextLine());
-        System.out.println("Prezime trenera: ");
-        coach.setLastName(scanner.nextLine());
-        System.out.println("Godina rođenja: ");
-        coach.setBirthYear(scanner.nextInt());
-        System.out.println("Godine iskustva: ");
-        coach.setYearsOfExperience(scanner.nextInt());
-        scanner.nextLine();
+        coach.setName(inputHandler.insertRequiredText("Ime trenera: "));
+        coach.setLastName(inputHandler.insertRequiredText("Prezime trenera: "));
+        coach.setBirthYear(inputHandler.insertWholeNumber(
+                "Godina rođenja trenera: ", 1, currentYear
+        ));
+        coach.setYearsOfExperience(inputHandler.insertWholeNumber(
+                "Godine iskustva: ", 0, Integer.MAX_VALUE
+        ));
         System.out.println("\n");
 
         return  coach;

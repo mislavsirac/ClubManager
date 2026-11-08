@@ -1,17 +1,13 @@
 package hr.tvz.football.records;
 
-import java.util.Scanner;
+import hr.tvz.football.helper.ExceptionHandler;
 
 public record Address(String street, String houseNumber, String city) {
 
-    public static Address InsertAddress(Scanner scanner){
-
-        System.out.println("Ulica: ");
-        var street = scanner.nextLine();
-        System.out.println("Kućni broj: ");
-        var houseNumber = scanner.nextLine();
-        System.out.println("Grad: ");
-        var city = scanner.nextLine();
+    public static Address InsertAddress(ExceptionHandler inputHandler){
+        var street = inputHandler.insertRequiredText("Ulica: ");
+        var houseNumber = inputHandler.insertRequiredText("Kućni broj: ");
+        var city = inputHandler.insertRequiredText("Grad: ");
 
         return new Address(street, houseNumber, city);
     }

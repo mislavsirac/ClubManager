@@ -1,9 +1,10 @@
 package hr.tvz.football.classes;
 
 import hr.tvz.football.abstracts.Building;
+import hr.tvz.football.helper.ExceptionHandler;
 import hr.tvz.football.records.Address;
 
-import java.util.Scanner;
+import java.time.Year;
 
 public class Stadium extends Building {
     private Integer capacity;
@@ -45,19 +46,20 @@ public class Stadium extends Building {
         this.covered = covered;
     }
 
-    public static Stadium InsertStadium(Scanner scanner){
+    public static Stadium InsertStadium(ExceptionHandler inputHandler){
         Stadium stadium = new Stadium();
 
-        System.out.println("Naziv: ");
-        stadium.setName(scanner.nextLine());
-        stadium.setAddress(Address.InsertAddress(scanner));
-        System.out.println("Kapacitet: ");
-        stadium.setCapacity(scanner.nextInt());
-        System.out.println("Godina izgradnje: ");
-        stadium.setYearMade(scanner.nextInt());
-        System.out.println("Je li stadion natkriven: ");
-        stadium.setCovered(scanner.nextBoolean());
-        scanner.nextLine();
+        stadium.setName(inputHandler.insertRequiredText("Naziv: "));
+        stadium.setAddress(Address.InsertAddress(inputHandler));
+        stadium.setCapacity(inputHandler.insertOptinalWholeNumber(
+                "Kapacitet (Enter = nije unesen): ", 1, Integer.MAX_VALUE
+        ));
+        stadium.setYearMade(inputHandler.insertOptinalWholeNumber(
+                "Godina izgradnje (Enter = nije unesena): ", 1, Year.now().getValue()
+        ));
+        stadium.setCovered(inputHandler.insertOptionalBoolean(
+                "Natkriven (true/false, Enter = nije uneseno): "
+        ));
         System.out.println("\n");
 
         return  stadium;

@@ -1,9 +1,8 @@
 package hr.tvz.football.classes;
 
 import hr.tvz.football.abstracts.Building;
+import hr.tvz.football.helper.ExceptionHandler;
 import hr.tvz.football.records.Address;
-
-import java.util.Scanner;
 
 public class MedicalInstitution extends Building {
     private int numberOfClinics;
@@ -54,17 +53,17 @@ public class MedicalInstitution extends Building {
         return getDescription(this, ordinalNumber, buildingCapacity);
     }
 
-    public static MedicalInstitution InsertMedicalInstitution(Scanner scanner) {
+    public static MedicalInstitution InsertMedicalInstitution(ExceptionHandler inputHandler) {
         MedicalInstitution medicalInstitution = new MedicalInstitution();
 
-        System.out.println("Naziv: ");
-        medicalInstitution.setName(scanner.nextLine());
-        medicalInstitution.setAddress(Address.InsertAddress(scanner));
-        System.out.println("Broj ambulanti: ");
-        medicalInstitution.setNumberOfClinics(scanner.nextInt());
-        System.out.println("Ima hitnu službu (true/false): ");
-        medicalInstitution.setHasEmergencyService(scanner.nextBoolean());
-        scanner.nextLine();
+        medicalInstitution.setName(inputHandler.insertRequiredText("Naziv: "));
+        medicalInstitution.setAddress(Address.InsertAddress(inputHandler));
+        medicalInstitution.setNumberOfClinics(inputHandler.insertWholeNumber(
+                "Broj ambulanti: ", 1, Integer.MAX_VALUE
+        ));
+        medicalInstitution.setHasEmergencyService(inputHandler.insertBoolean(
+                "Ima hitnu službu (true/false): "
+        ));
         System.out.println("\n");
 
         return medicalInstitution;
